@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.example.answer.answer.controller.AnswerController;
+import org.example.answer.answer.controller.AnswerController.AnswerForm;
+import org.example.answer.answer.service.AnswerService;
 import org.example.question.question.entity.Question;
 import org.example.question.question.service.QuestionService;
 import org.springframework.stereotype.Controller;
@@ -30,7 +33,7 @@ public class QuestionController {
         return "question_list";
     }
     @GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id){
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
         Question question = questionService.getQuestion(id);
         model.addAttribute("question",question);
         return "question_detail";
