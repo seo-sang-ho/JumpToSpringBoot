@@ -1,5 +1,6 @@
 package org.example.question.question.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.question.question.entity.Question;
 import org.example.question.question.repository.QuestionRepository;
@@ -18,11 +19,12 @@ public class QuestionController {
 
     @GetMapping("/question/list")
     public String list(Model model){
-
         List<Question> questionList = questionRepository.findAll();
-
         model.addAttribute("questionList",questionList);
-
         return "question_list";
+    }
+    @GetMapping("/")
+    public String root(){
+        return "redirect:/question/list";
     }
 }
