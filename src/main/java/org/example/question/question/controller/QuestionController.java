@@ -1,13 +1,11 @@
 package org.example.question.question.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.question.question.entity.Question;
-import org.example.question.question.repository.QuestionRepository;
+import org.example.question.question.service.QuestionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -15,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @GetMapping("/question/list")
     public String list(Model model){
-        List<Question> questionList = questionRepository.findAll();
+        List<Question> questionList = questionService.getList();
         model.addAttribute("questionList",questionList);
         return "question_list";
     }
