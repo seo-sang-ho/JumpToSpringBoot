@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.example.user.user.service.UserService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +55,17 @@ public class UserController {
             return "signup_form";
         }
 
-        userService.create(userCreateForm.username, userCreateForm.email, userCreateForm.password1);
+        try{
+            userService.create(userCreateForm.username, userCreateForm.email, userCreateForm.password1);
+        }catch (DataIntegrityViolationException e){
+            e.printStackTrace();
+            bindingResult.reject("signupFailed","이미 등록된 사용자입니다.");
+            return "signup_form";
+        }catch (Exception e){
+            e.printStackTrace();
+            bindingResult.reject("signupFailed",e.getMessage());
+            return "signup_form";
+        }
 
         return "redirect:/";
     }
