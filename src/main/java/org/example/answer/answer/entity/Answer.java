@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.question.question.entity.Question;
 import org.example.user.user.entity.SiteUser;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -26,4 +27,6 @@ public class Answer {
 
     @ManyToOne
     private SiteUser author;
+
+    private LocalDateTime modifyDate;
 }
