@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.question.question.entity.Question;
 import org.example.question.question.exception.DataNotFoundException;
 import org.example.question.question.repository.QuestionRepository;
+import org.example.user.user.entity.SiteUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,11 +34,12 @@ public class QuestionService {
         }
     }
 
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser author) {
         Question question = new Question();
         question.setSubject(subject);
         question.setCreateDate(LocalDateTime.now());
         question.setContent(content);
+        question.setAuthor(author);
         questionRepository.save(question);
     }
     public Page<Question> getList(int page){

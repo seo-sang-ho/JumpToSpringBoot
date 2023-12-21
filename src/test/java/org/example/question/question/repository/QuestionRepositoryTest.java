@@ -77,6 +77,7 @@ public class QuestionRepositoryTest {
             question.setSubject(subject);
             question.setContent(content);
             question.setCreateDate(LocalDateTime.now());
+            question.setAuthor(null);
             questionRepository.save(question);
         }
     }
