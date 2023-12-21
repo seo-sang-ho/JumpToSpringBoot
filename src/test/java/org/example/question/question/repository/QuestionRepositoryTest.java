@@ -67,4 +67,17 @@ public class QuestionRepositoryTest {
         Question q = qList.get(0);
         assertEquals("sbb가 무엇인가요?",q.getSubject());
     }
+
+    @Test
+    void t8(){
+        for(int i = 1; i < 300; i++){
+            Question question = new Question();
+            String subject = String.format("테스트 데이터입니다:[%03d]",i);
+            String content = "내용무";
+            question.setSubject(subject);
+            question.setContent(content);
+            question.setCreateDate(LocalDateTime.now());
+            questionRepository.save(question);
+        }
+    }
 }

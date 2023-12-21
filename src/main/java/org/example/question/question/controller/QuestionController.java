@@ -11,6 +11,7 @@ import org.example.answer.answer.controller.AnswerController.AnswerForm;
 import org.example.answer.answer.service.AnswerService;
 import org.example.question.question.entity.Question;
 import org.example.question.question.service.QuestionService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,12 +27,12 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-    @GetMapping("/list")
-    public String list(Model model){
-        List<Question> questionList = questionService.getList();
-        model.addAttribute("questionList",questionList);
-        return "question_list";
-    }
+//    @GetMapping("/list")
+//    public String list(Model model){
+//        List<Question> questionList = questionService.getList();
+//        model.addAttribute("questionList",questionList);
+//        return "question_list";
+//    }
     @GetMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
         Question question = questionService.getQuestion(id);
@@ -59,5 +60,11 @@ public class QuestionController {
         }
         questionService.create(questionForm.subject,questionForm.content);
         return "redirect:/question/list";
+    }
+    @GetMapping("/list")
+    public String list(Model model, @RequestParam(value = "page",defaultValue = "0")int page){
+        Page<Question> paging = questionService.getList(page);
+        model.addAttribute("paging",paging);
+        return "question_list";
     }
 }
