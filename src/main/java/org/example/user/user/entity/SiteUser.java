@@ -19,4 +19,6 @@ public class SiteUser {
 
     @Column(unique = true)
     private String email;
+
+    private boolean paid; // 유료 회원 여부
 }
