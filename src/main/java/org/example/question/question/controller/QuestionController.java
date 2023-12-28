@@ -16,6 +16,9 @@ import org.example.user.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -40,12 +44,31 @@ public class QuestionController {
 //        model.addAttribute("questionList",questionList);
 //        return "question_list";
 //    }
-    @GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
-        Question question = questionService.getQuestion(id);
+@GetMapping(value = "/detail/{id}")
+public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
+    Question question = questionService.getQuestion(id);
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+    boolean hasPaidAuthority = authorities.stream()
+            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("PAID"));
+
+    if(question.isPaid()){ // 유료글일때
+        if(hasPaidAuthority){ // 유료 회원이면
+            model.addAttribute("question",question);
+        }
+        if(!hasPaidAuthority){ // 유료 회원이 아니면
+            Question limitQuestion = questionService.getQuestion(id);
+            limitQuestion.setContent("멤버쉽 회원에게만 보이는 내용입니다.");
+            model.addAttribute("question",limitQuestion);
+        }
+    } else { // 무료글일때
         model.addAttribute("question",question);
-        return "question_detail";
     }
+    return "question_detail";
+}
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm){
