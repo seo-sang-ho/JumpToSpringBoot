@@ -52,7 +52,7 @@ public String detail(Model model, @PathVariable("id") Integer id, AnswerForm ans
     Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
     boolean hasPaidAuthority = authorities.stream()
-            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("PAID"));
+            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_PAID"));
 
     if(question.isPaid()){ // 유료글일때
         if(hasPaidAuthority){ // 유료 회원이면
