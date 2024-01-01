@@ -47,27 +47,20 @@ public class QuestionController {
 @GetMapping(value = "/detail/{id}")
 public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
     Question question = questionService.getQuestion(id);
-
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
     boolean hasPaidAuthority = authorities.stream()
             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_PAID"));
 
-    if(question.isPaid()){ // 유료글일때
-        if(hasPaidAuthority){ // 유료 회원이면
-            model.addAttribute("question",question);
-        }
-        if(!hasPaidAuthority){ // 유료 회원이 아니면
-            Question limitQuestion = questionService.getQuestion(id);
-            limitQuestion.setContent("멤버쉽 회원에게만 보이는 내용입니다.");
-            model.addAttribute("question",limitQuestion);
-        }
-    } else { // 무료글일때
-        model.addAttribute("question",question);
+    if(question.isPaid() && !hasPaidAuthority){ // 유료글이며, 유료 회원이 아닐 때
+        question.setContent("멤버쉽 회원에게만 보이는 내용입니다.");
     }
+
+    model.addAttribute("question",question);
     return "question_detail";
 }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
