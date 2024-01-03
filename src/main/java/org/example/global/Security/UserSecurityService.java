@@ -1,9 +1,9 @@
 package org.example.global.Security;
 
 import lombok.RequiredArgsConstructor;
-import org.example.user.user.entity.SiteUser;
-import org.example.user.user.repository.UserRepository;
-import org.example.user.user.role.UserRole;
+import org.example.domain.user.user.entity.SiteUser;
+import org.example.domain.user.user.repository.UserRepository;
+import org.example.domain.user.user.role.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
