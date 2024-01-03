@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
@@ -19,6 +20,7 @@ public class NotProd {
 
     private final UserService userService;
     private final QuestionService questionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public ApplicationRunner initNotProd(){
@@ -29,6 +31,22 @@ public class NotProd {
 
     @Transactional
     public void work1(){
-//        questionService.create();
+        createUser();
+        createQuestion();
     }
+
+    public void createUser(){
+        if(userService.count() >= 100) return;
+        for(int i = 1; i <= 100; i++){
+            userService.create("user"+i, "user"+i+"@email.com", passwordEncoder.encode("password"+i), true);
+        }
+    }
+
+    public void createQuestion(){
+        if(questionService.count() >= 100) return;
+        for(int i = 1; i <= 100; i++){
+            questionService.create("제목"+ i, "내용" + i, userService.getUser("user"+i), true);
+        }
+    }
+
 }

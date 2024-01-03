@@ -65,4 +65,8 @@ public class QuestionService {
         question.getVoter().add(siteUser);
         questionRepository.save(question);
     }
+
+    public long count() {
+        return questionRepository.count();
+    }
 }
