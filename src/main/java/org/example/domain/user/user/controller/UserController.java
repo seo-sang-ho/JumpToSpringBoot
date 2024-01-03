@@ -37,6 +37,7 @@ public class UserController {
         @NotEmpty(message = "이메일은 필수항목입니다.")
         @Email
         private String email;
+        private boolean paid;
     }
 
     @GetMapping("/signup")
@@ -56,7 +57,7 @@ public class UserController {
         }
 
         try{
-            userService.create(userCreateForm.username, userCreateForm.email, userCreateForm.password1);
+            userService.create(userCreateForm.username, userCreateForm.email, userCreateForm.password1,userCreateForm.paid);
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
             bindingResult.reject("signupFailed","이미 등록된 사용자입니다.");

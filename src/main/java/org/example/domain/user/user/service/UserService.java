@@ -15,11 +15,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SiteUser create(String username, String email, String password){
+    public SiteUser create(String username, String email, String password,boolean paid){
         SiteUser user = new SiteUser();
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        user.setPaid(paid);
         userRepository.save(user);
         return user;
     }
@@ -31,5 +32,9 @@ public class UserService {
         }else{
             throw new DataNotFoundException("siteuser not found");
         }
+    }
+
+    public long count() {
+        return userRepository.count();
     }
 }
