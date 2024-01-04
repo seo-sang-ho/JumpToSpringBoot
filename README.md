@@ -34,3 +34,28 @@
 > 
 > * 생각되는 이유 = 가져올때 input이 hidden이기떄문에 발생한다고 생각됨
 > * 해결 방법 = id="editor"를 어떻게 해야할지 생각해서 해결하면 수정도 정상적으로 돌아갈 것 같음
+
+
+> ### 해결
+> * chatGPT를 통해 questionForm에 들어있는 content의 내용을 editor안에 넣어줌으로서 해결
+> 
+
+#### 수정한 코드
+ ``` 
+ <script layout:fragment="script" type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        events: {
+            change: function() {
+                document.querySelector('#content').value = editor.getMarkdown();
+            }
+        }
+    });
+    editor.setMarkdown(/*[[${questionForm.content}]]*/);
+    /*]]>*/
+</script>
+
+```
