@@ -1,0 +1,61 @@
+[second 7fd671b] feat: add Blocking content who not paid Site_user  
+이때 아이디의 PAID 필드가 true여도 PAID 권한을 가지고 있지않다는 것을 발견  
+해결 >  boolean hasPaidAuthority = authorities.stream()
+.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_PAID"));
+
+해야되는 작업
+1. 질문 작성할 때 유료글 유무 설정 radio 버튼 만들기
+2. 자기가 비멥서쉽일때 유료글을 작성한다면 비멤버쉽이어도 자신의 유료글은 볼 수 있어야한다.
+3. 댓글도 마찬가지로 비멤버쉽은 유료글에 댓글도 작성 할 수 없어야한다.
+
+
+## 3번 미션 사항 중 오류 발생
+> 3번 선택미션을 했을때 오류 발생
+> * NotProd에 만든 로그인 정보들로 로그인이 안됨
+> 
+> ```userService.create("user"+i, "user"+i+"@email.com", passwordEncoder.encode("password"+i), true);```
+> 
+> 이미 userService의 create메서드에서 알아서 암호화 처리를 해주는데 위 코드에도 작성하므로써 비밀번호를 두번 암호화하는 꼴이 됨
+> 
+> ```userService.create("user"+i, "user"+i+"@email.com", "password"+i , true);```
+> 
+> 이렇게 바꾸었더니 원하는 대로 로그인 됨
+> 
+## TOAST UI 적용 시 발생하는 오류 
+> TOAST UI markdown editor를 쓰려면 div의 id 값을 editor로 해줘야하는데 이때 th:field="*{content}"와 겹치는 문제 떄문에 코드를 아래처럼 바꿈
+> ```
+> <div class="mb-3">
+>  <label for="content" class="form-label">내용</label>
+>  <div id="editor"></div>
+>  <input type="hidden" id="content" name="content" th:value="${content}" >
+> </div>
+>  ```
+> 코드를 이렇게 작성했는데 질문 수정 시 작성되어있던 내용을 가져오지 못하는 오류가 발생
+> 
+> * 생각되는 이유 = 가져올때 input이 hidden이기떄문에 발생한다고 생각됨
+> * 해결 방법 = id="editor"를 어떻게 해야할지 생각해서 해결하면 수정도 정상적으로 돌아갈 것 같음
+
+
+> ### 해결
+> * chatGPT를 통해 questionForm에 들어있는 content의 내용을 editor안에 넣어줌으로서 해결
+> 
+
+#### 수정한 코드
+ ``` 
+ <script layout:fragment="script" type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        events: {
+            change: function() {
+                document.querySelector('#content').value = editor.getMarkdown();
+            }
+        }
+    });
+    editor.setMarkdown(/*[[${questionForm.content}]]*/);
+    /*]]>*/
+</script>
+
+```
