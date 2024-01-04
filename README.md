@@ -20,3 +20,17 @@
 > ```userService.create("user"+i, "user"+i+"@email.com", "password"+i , true);```
 > 
 > 이렇게 바꾸었더니 원하는 대로 로그인 됨
+> 
+## TOAST UI 적용 시 발생하는 오류 
+> TOAST UI markdown editor를 쓰려면 div의 id 값을 editor로 해줘야하는데 이때 th:field="*{content}"와 겹치는 문제 떄문에 코드를 아래처럼 바꿈
+> ```
+> <div class="mb-3">
+>  <label for="content" class="form-label">내용</label>
+>  <div id="editor"></div>
+>  <input type="hidden" id="content" name="content" th:value="${content}" >
+> </div>
+>  ```
+> 코드를 이렇게 작성했는데 질문 수정 시 작성되어있던 내용을 가져오지 못하는 오류가 발생
+> 
+> * 생각되는 이유 = 가져올때 input이 hidden이기떄문에 발생한다고 생각됨
+> * 해결 방법 = id="editor"를 어떻게 해야할지 생각해서 해결하면 수정도 정상적으로 돌아갈 것 같음
